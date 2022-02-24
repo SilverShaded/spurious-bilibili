@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD MAPPER 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spurious.bilibili.dao.UserDao">
-    <select id="geyUserByPhone" parameterType="java.lang.String"
+    <select id="getUserByPhone" parameterType="java.lang.String"
             resultType="com.spurious.bilibili.dao.domain.User">
         select * from t_user where phone = #{phone}
     </select>
@@ -12,9 +12,61 @@
             values(#{phone},#{email},#{password},#{salt},#{createTime})
     </insert>
 
-    <insert id="addUserInfo" parameterType="com.spurious.bilibili.dao.domain.UserInfo">
+    <insert id="addUserInfo" parameterType="com.spurious.bilibili.dao.domain.UserInfo"
+            useGeneratedKeys="true" keyProperty="id">
         insert into t_user_info(userId,nick,avatar,sign,gender,birth,createTime)
             values(#{userId},#{nick},#{avatar},#{sign},#{gender},#{birth},#{createTime})
     </insert>
+    
+    <select id="getUserById" parameterType="java.lang.Long"
+            resultType="com.spurious.bilibili.dao.domain.User">
+        select * from t_user where id = #{id}
+    </select>
+    
+    <select id="getUserInfoByUserId" parameterType="java.lang.Long"
+            resultType="com.spurious.bilibili.dao.domain.UserInfo">
+        select * from t_user_info where userId = #{userId}
+    </select>
+    
+    <update id="updatePhoneById">
+        update t_user SET phone = #{phone} where id = #{id}
+    </update>
+
+    <update id="updateEmailById">
+        update t_user SET email = #{email} where id = #{id}
+    </update>
+
+    <update id="updatePasswordById">
+        update t_user SET password = #{password} where id = #{id}
+    </update>
+    
+    <select id="getUserByEmail" parameterType="java.lang.String"
+            resultType="com.spurious.bilibili.dao.domain.User">
+        select * from t_user where email = #{email}
+    </select>
+    
+    <select id="getRefreshTokenDetail" parameterType="java.lang.String"
+            resultType="com.spurious.bilibili.dao.domain.RefreshTokenDetail">
+        select * from t_refresh_token where refreshToken = #{refreshToken}
+    </select>
+    
+    <delete id="deleteRefreshToken">
+        delete from  t_refresh_token
+                where refreshToken = {#refreshToken} and  userId = #{userId}
+    </delete>
+    
+    <delete id="deleteRefreshTokenByUserId">
+        delete from t_refresh_token where userId = #{userId}
+    </delete>
+    
+    <insert id="addRefreshToken">
+        insert into t_refresh_token(refreshToken,userId,createTime)
+                values(#{refreshToken},#{userId},#{createTime})
+    </insert>
+    
+    <select id="getRefreshTokenByUserId" parameterType="java.lang.Long"
+            resultType="java.lang.String">
+        select refreshToken from t_refresh_token where userId = #{userId}
+    </select>
 
 </mapper>
